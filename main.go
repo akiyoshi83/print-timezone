@@ -19,16 +19,33 @@ func main() {
 	} else {
 		src = strings.Join(os.Args[1:], " ")
 	}
+
 	t, err := time.Parse(Format, src)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "parse error %v", src)
 		os.Exit(1)
 	}
-	utc, _ := time.LoadLocation("UTC")
-	pst, _ := time.LoadLocation("America/Los_Angeles")
-	utcT := t.In(utc)
-	pstT := t.In(pst)
-	fmt.Printf("%s\n", t.Format(Format))
-	fmt.Printf("%s\n", utcT.Format(Format))
-	fmt.Printf("%s\n", pstT.Format(Format))
+
+	locations := []string{
+		"UTC",
+		"Asia/Tokyo",
+		"America/Los_Angeles",
+	}
+
+	for _, loc := range locations {
+		str, err := formatWithTimezone(t, loc)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "convert error %v", err)
+		}
+		fmt.Printf("%s\n", str)
+	}
+}
+
+func formatWithTimezone(t time.Time, loc string) (string, error) {
+	l, err := time.LoadLocation(loc)
+	if err != nil {
+		return "", err
+	}
+	lt := t.In(l)
+	return lt.Format(Format), nil
 }
