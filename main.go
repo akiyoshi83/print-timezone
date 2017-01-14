@@ -8,8 +8,10 @@ import (
 )
 
 const (
-	//Format is input time format
-	Format = "2006-01-02 15:04 MST"
+	// InputFormat is format for input time
+	InputFormat = "2006-01-02 15:04 MST"
+	// OutputFormat is format for output time
+	OutputFormat = "2006-01-02 15:04 MST -0700"
 )
 
 var defaultLocations = [...]string{
@@ -22,12 +24,12 @@ var defaultLocations = [...]string{
 func main() {
 	var src string
 	if len(os.Args) < 2 {
-		src = time.Now().Format(Format)
+		src = time.Now().Format(InputFormat)
 	} else {
 		src = strings.Join(os.Args[1:], " ")
 	}
 
-	t, err := time.Parse(Format, src)
+	t, err := time.Parse(InputFormat, src)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "parse error %v", src)
 		os.Exit(1)
@@ -50,5 +52,5 @@ func formatWithTimezone(t time.Time, loc string) (string, error) {
 		return "", err
 	}
 	lt := t.In(l)
-	return lt.Format(Format), nil
+	return lt.Format(OutputFormat), nil
 }
