@@ -12,6 +12,13 @@ const (
 	Format = "2006-01-02 15:04 MST"
 )
 
+var defaultLocations = [...]string{
+	"UTC",
+	"America/Los_Angeles",
+	"Europe/London",
+	"Asia/Tokyo",
+}
+
 func main() {
 	var src string
 	if len(os.Args) < 2 {
@@ -26,11 +33,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	locations := []string{
-		"UTC",
-		"Asia/Tokyo",
-		"America/Los_Angeles",
-	}
+	locations := defaultLocations
 
 	for _, loc := range locations {
 		str, err := formatWithTimezone(t, loc)
