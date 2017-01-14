@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"os"
-	"path/filepath"
 	"strings"
 	"time"
 )
@@ -14,11 +13,12 @@ const (
 )
 
 func main() {
+	var src string
 	if len(os.Args) < 2 {
-		fmt.Fprintf(os.Stderr, "%s <timestring>\n", filepath.Base(os.Args[0]))
-		os.Exit(1)
+		src = time.Now().Format(Format)
+	} else {
+		src = strings.Join(os.Args[1:], " ")
 	}
-	src := strings.Join(os.Args[1:], " ")
 	t, err := time.Parse(Format, src)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "parse error %v", src)
