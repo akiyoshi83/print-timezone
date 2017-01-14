@@ -40,7 +40,7 @@ func main() {
 	for _, loc := range locations {
 		str, err := formatWithTimezone(t, loc)
 		if err != nil {
-			fmt.Fprintf(os.Stderr, "convert error %v", err)
+			fmt.Fprintf(os.Stderr, "%v", err)
 		}
 		fmt.Printf("%s\n", str)
 	}
@@ -49,7 +49,7 @@ func main() {
 func formatWithTimezone(t time.Time, loc string) (string, error) {
 	l, err := time.LoadLocation(loc)
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("formatWithTimezone %v", err)
 	}
 	lt := t.In(l)
 	return lt.Format(OutputFormat), nil
