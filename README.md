@@ -2,7 +2,24 @@
 
 Print the time in multiple time zone.
 
-## USAGE
+## Install
+
+```
+$ go get github.com/akiyoshi83/print-timezone
+```
+
+Set alias if you want.
+
+```
+# Linux or OSX
+alias ptz='print-timezone'
+
+# Windows
+doskey ptz=print-timezone
+```
+
+
+## Usage
 
 ```
 # now
