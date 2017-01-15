@@ -3,12 +3,24 @@ package main
 import (
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"os"
+	"path/filepath"
+	"runtime"
 	"strings"
 	"time"
+
+	"gopkg.in/yaml.v2"
 )
 
+// PtzConf is application configuration
+type PtzConf struct {
+	Locations []string
+}
+
 const (
+	// ConfFileName is application configuration file name
+	ConfFileName = ".print-timezone.yml"
 	// OutputFormat is format for output time
 	OutputFormat = "2006-01-02 15:04 MST -0700"
 )
@@ -34,12 +46,20 @@ var defaultLocations = []string{
 }
 
 var (
-	confPath  string
-	inputTime string
+	defaultConfPath string
+	confPath        string
+	inputTime       string
+	conf            PtzConf
 )
+
+func init() {
+	defaultConfPath = filepath.Join(homeDir(), ConfFileName)
+	conf.Locations = append(conf.Locations, defaultLocations...)
+}
 
 func main() {
 	parseArgs()
+	loadConfig(confPath)
 
 	t, err := tryParseTime(InputFormats, inputTime)
 	if err != nil {
@@ -48,7 +68,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	printWithTimezone(t, defaultLocations)
+	printWithTimezone(t, conf.Locations)
 }
 
 func parseArgs() {
@@ -59,6 +79,47 @@ func parseArgs() {
 	} else {
 		inputTime = strings.Join(flag.Args()[:], " ")
 	}
+}
+
+func homeDir() string {
+	home := os.Getenv("HOME")
+	if home == "" && runtime.GOOS == "windows" {
+		home = os.Getenv("USERPROFILE")
+	}
+	return home
+}
+
+func exists(name string) bool {
+	_, err := os.Stat(name)
+	return !os.IsNotExist(err)
+}
+
+func loadConfig(confPath string) error {
+	var fpath string
+	var err error
+
+	if confPath != "" {
+		if !exists(confPath) {
+			return fmt.Errorf("%s does not exist", confPath)
+		}
+		fpath = confPath
+	} else {
+		if !exists(defaultConfPath) {
+			return nil
+		}
+		fpath = defaultConfPath
+	}
+
+	data, err := ioutil.ReadFile(fpath)
+	if err != nil {
+		return err
+	}
+
+	yaml.Unmarshal(data, &conf)
+	if len(conf.Locations) == 0 {
+		conf.Locations = append(conf.Locations, defaultLocations...)
+	}
+	return nil
 }
 
 func tryParseTime(formats []string, s string) (time.Time, error) {
