@@ -19,6 +19,7 @@ var defaultLocations = [...]string{
 	"America/Los_Angeles",
 	"Europe/London",
 	"Asia/Tokyo",
+	"Australia/Sydney",
 }
 
 func main() {
