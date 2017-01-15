@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 	"strings"
@@ -32,22 +33,32 @@ var defaultLocations = []string{
 	"Australia/Sydney",
 }
 
-func main() {
-	var src string
-	if len(os.Args) < 2 {
-		src = time.Now().Format(InputFormats[0])
-	} else {
-		src = strings.Join(os.Args[1:], " ")
-	}
+var (
+	confPath  string
+	inputTime string
+)
 
-	t, err := tryParseTime(InputFormats, src)
+func main() {
+	parseArgs()
+
+	t, err := tryParseTime(InputFormats, inputTime)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "parse error %v\n", src)
+		fmt.Fprintf(os.Stderr, "parse error %v\n", inputTime)
 		fmt.Fprintf(os.Stderr, "\n---SUPPORTED FORMATS---\n%v\n\n", strings.Join(InputFormats, "\n"))
 		os.Exit(1)
 	}
 
 	printWithTimezone(t, defaultLocations)
+}
+
+func parseArgs() {
+	flag.StringVar(&confPath, "f", "", "configuration file path")
+	flag.Parse()
+	if flag.NArg() < 2 {
+		inputTime = time.Now().Format(InputFormats[0])
+	} else {
+		inputTime = strings.Join(flag.Args()[:], " ")
+	}
 }
 
 func tryParseTime(formats []string, s string) (time.Time, error) {
