@@ -14,7 +14,7 @@ const (
 	OutputFormat = "2006-01-02 15:04 MST -0700"
 )
 
-var defaultLocations = [...]string{
+var defaultLocations = []string{
 	"UTC",
 	"America/Los_Angeles",
 	"Europe/London",
@@ -36,15 +36,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	locations := defaultLocations
-
-	for _, loc := range locations {
-		str, err := formatWithTimezone(t, loc)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "%v", err)
-		}
-		fmt.Printf("%s\n", str)
-	}
+	printWithTimezone(t, defaultLocations)
 }
 
 func formatWithTimezone(t time.Time, loc string) (string, error) {
@@ -54,4 +46,14 @@ func formatWithTimezone(t time.Time, loc string) (string, error) {
 	}
 	lt := t.In(l)
 	return lt.Format(OutputFormat), nil
+}
+
+func printWithTimezone(t time.Time, locations []string) {
+	for _, loc := range locations {
+		str, err := formatWithTimezone(t, loc)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "%v", err)
+		}
+		fmt.Printf("%s\n", str)
+	}
 }
