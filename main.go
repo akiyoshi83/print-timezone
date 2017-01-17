@@ -53,19 +53,6 @@ func parseArgs() {
 	}
 }
 
-func homeDir() string {
-	home := os.Getenv("HOME")
-	if home == "" && runtime.GOOS == "windows" {
-		home = os.Getenv("USERPROFILE")
-	}
-	return home
-}
-
-func exists(name string) bool {
-	_, err := os.Stat(name)
-	return !os.IsNotExist(err)
-}
-
 func loadConfig(confPath string) error {
 	var fpath string
 	var err error
@@ -89,4 +76,17 @@ func loadConfig(confPath string) error {
 
 	conf.LoadFromYaml(data)
 	return nil
+}
+
+func homeDir() string {
+	home := os.Getenv("HOME")
+	if home == "" && runtime.GOOS == "windows" {
+		home = os.Getenv("USERPROFILE")
+	}
+	return home
+}
+
+func exists(name string) bool {
+	_, err := os.Stat(name)
+	return !os.IsNotExist(err)
 }
