@@ -18,12 +18,12 @@ var (
 	defaultConfPath string
 	confPath        string
 	inputTime       string
-	conf            ptz.Conf
+	conf            *ptz.Conf
 )
 
 func init() {
 	defaultConfPath = filepath.Join(homeDir(), ptz.ConfFileName)
-	conf.Locations = append(conf.Locations, ptz.DefaultLocations...)
+	conf = ptz.NewConf()
 }
 
 func main() {
@@ -86,7 +86,7 @@ func loadConfig(confPath string) error {
 
 	yaml.Unmarshal(data, &conf)
 	if len(conf.Locations) == 0 {
-		conf.Locations = append(conf.Locations, ptz.DefaultLocations...)
+		conf.SetDefaultLocation()
 	}
 	return nil
 }

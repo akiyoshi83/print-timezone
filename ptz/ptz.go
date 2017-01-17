@@ -11,6 +11,18 @@ type Conf struct {
 	Locations []string
 }
 
+// NewConf return new ptz.Conf pointer
+func NewConf() *Conf {
+	c := new(Conf)
+	c.SetDefaultLocation()
+	return c
+}
+
+// SetDefaultLocation set default timezone locations
+func (c *Conf) SetDefaultLocation() {
+	c.Locations = append(c.Locations, DefaultLocations...)
+}
+
 const (
 	// ConfFileName is application configuration file name
 	ConfFileName = ".print-timezone.yml"
