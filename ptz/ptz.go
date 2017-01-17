@@ -24,8 +24,6 @@ func (c *Conf) SetDefaultLocation() {
 }
 
 const (
-	// ConfFileName is application configuration file name
-	ConfFileName = ".print-timezone.yml"
 	// OutputFormat is format for output time
 	OutputFormat = "2006-01-02 15:04 MST -0700"
 )

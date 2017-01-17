@@ -14,6 +14,10 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+const (
+	confFileName = ".print-timezone.yml"
+)
+
 var (
 	defaultConfPath string
 	confPath        string
@@ -22,7 +26,7 @@ var (
 )
 
 func init() {
-	defaultConfPath = filepath.Join(homeDir(), ptz.ConfFileName)
+	defaultConfPath = filepath.Join(homeDir(), confFileName)
 	conf = ptz.NewConf()
 }
 
