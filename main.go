@@ -11,7 +11,6 @@ import (
 	"time"
 
 	"github.com/akiyoshi83/print-timezone/ptz"
-	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -88,9 +87,6 @@ func loadConfig(confPath string) error {
 		return err
 	}
 
-	yaml.Unmarshal(data, &conf)
-	if len(conf.Locations) == 0 {
-		conf.SetDefaultLocation()
-	}
+	conf.LoadFromYaml(data)
 	return nil
 }

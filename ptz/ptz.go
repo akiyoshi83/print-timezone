@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"time"
+
+	"gopkg.in/yaml.v2"
 )
 
 // Conf is application configuration
@@ -21,6 +23,14 @@ func NewConf() *Conf {
 // SetDefaultLocation set default timezone locations
 func (c *Conf) SetDefaultLocation() {
 	c.Locations = append(c.Locations, DefaultLocations...)
+}
+
+// LoadFromYaml loads ptz.Conf contents from yaml
+func (c *Conf) LoadFromYaml(data []byte) {
+	yaml.Unmarshal(data, c)
+	if len(c.Locations) == 0 {
+		c.SetDefaultLocation()
+	}
 }
 
 const (
