@@ -21,33 +21,33 @@ var (
 	defaultConfPath string
 	confPath        string
 	inputTime       string
-	conf            *ptz.Conf
+	pptz            *ptz.Ptz
 )
 
 func init() {
 	defaultConfPath = filepath.Join(homeDir(), confFileName)
-	conf = ptz.NewConf()
+	pptz = ptz.NewPtz()
 }
 
 func main() {
 	parseArgs()
 	loadConfig(confPath)
 
-	t, err := ptz.TryParseTime(ptz.InputFormats, inputTime)
+	t, err := pptz.TryParseTime(inputTime)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "parse error %v\n", inputTime)
-		fmt.Fprintf(os.Stderr, "\n---SUPPORTED FORMATS---\n%v\n\n", strings.Join(ptz.InputFormats, "\n"))
+		fmt.Fprintf(os.Stderr, "\n---SUPPORTED FORMATS---\n%v\n\n", strings.Join(pptz.InputFormats(), "\n"))
 		os.Exit(1)
 	}
 
-	ptz.PrintWithTimezone(t, conf.Locations)
+	pptz.PrintWithTimezone(t)
 }
 
 func parseArgs() {
 	flag.StringVar(&confPath, "f", "", "configuration file path")
 	flag.Parse()
 	if flag.NArg() < 2 {
-		inputTime = time.Now().Format(ptz.InputFormats[0])
+		inputTime = time.Now().Format(pptz.InputFormats()[0])
 	} else {
 		inputTime = strings.Join(flag.Args()[:], " ")
 	}
@@ -74,7 +74,7 @@ func loadConfig(confPath string) error {
 		return err
 	}
 
-	conf.LoadFromYaml(data)
+	pptz.LoadFromYaml(data)
 	return nil
 }
 
