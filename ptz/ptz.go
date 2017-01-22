@@ -10,9 +10,14 @@ import (
 
 // Ptz print time in multiple timezone
 type Ptz struct {
-	locations    []string
-	inputFormats []string
-	outputFormat string
+	c Conf
+}
+
+// Conf is print-timezone configuration
+type Conf struct {
+	Locations    []string
+	InputFormats []string
+	OutputFormat string
 }
 
 var defaultLocations = []string{
@@ -44,31 +49,31 @@ func NewPtz() *Ptz {
 
 // LoadFromYaml loads ptz.Ptz configuration from yaml
 func (p *Ptz) LoadFromYaml(data []byte) {
-	yaml.Unmarshal(data, p)
+	yaml.Unmarshal(data, &p.c)
 }
 
 // Locations are supported timezone
 func (p *Ptz) Locations() []string {
-	if len(p.locations) == 0 {
+	if len(p.c.Locations) == 0 {
 		return defaultLocations
 	}
-	return p.locations
+	return p.c.Locations
 }
 
 // InputFormats are used for parse input time from string
 func (p *Ptz) InputFormats() []string {
-	if len(p.inputFormats) == 0 {
+	if len(p.c.InputFormats) == 0 {
 		return defaultInputFormats
 	}
-	return p.inputFormats
+	return p.c.InputFormats
 }
 
 // OutputFormat is parse output time to string
 func (p *Ptz) OutputFormat() string {
-	if len(p.outputFormat) == 0 {
+	if len(p.c.OutputFormat) == 0 {
 		return defaultOutputFormat
 	}
-	return p.outputFormat
+	return p.c.OutputFormat
 }
 
 // TryParseTime parse `s` by `formats`
