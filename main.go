@@ -46,7 +46,7 @@ func main() {
 func parseArgs() {
 	flag.StringVar(&confPath, "f", "", "configuration file path")
 	flag.Parse()
-	if flag.NArg() < 2 {
+	if flag.NArg() < 1 {
 		inputTime = time.Now().Format(pptz.InputFormats()[0])
 	} else {
 		inputTime = strings.Join(flag.Args()[:], " ")
