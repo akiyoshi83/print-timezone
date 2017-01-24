@@ -5,6 +5,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/akiyoshi83/goymd"
 	"gopkg.in/yaml.v2"
 )
 
@@ -16,8 +17,8 @@ type Ptz struct {
 // Conf is print-timezone configuration
 type Conf struct {
 	Locations    []string
-	InputFormats []string
-	OutputFormat string
+	InputFormats []string `yaml:"input_formats"`
+	OutputFormat string   `yaml:"output_format"`
 }
 
 var defaultLocations = []string{
@@ -50,6 +51,10 @@ func NewPtz() *Ptz {
 // LoadFromYaml loads ptz.Ptz configuration from yaml
 func (p *Ptz) LoadFromYaml(data []byte) {
 	yaml.Unmarshal(data, &p.c)
+	for i, f := range p.c.InputFormats {
+		p.c.InputFormats[i] = goymd.GoStyle(f)
+	}
+	p.c.OutputFormat = goymd.GoStyle(p.c.OutputFormat)
 }
 
 // Locations are supported timezone

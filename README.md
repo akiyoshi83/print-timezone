@@ -52,16 +52,23 @@ locations:
   - Europe/Berlin
   - Asia/Tokyo
   - Australia/Sydney
+# You can use go style and YMD style format
+input_formats:
+  - "%Y-%m-%d %H:%M %Z"
+  - "%Y-%m-%d %H:%M:%S %Z"
+  - "%Y/%m/%d %H:%M %Z"
+  - "%Y/%m/%d %H:%M:%S %Z"
+output_format: "%Y-%m-%d %H:%M:%S %z"
 ```
 
 You can specify configuration file by `-f` switch.
 
 ```
 $ print-timezone -f /path/to/another-timezone.yml 2017-12-31 23:59 JST
-2017-12-31 14:59 UTC +0000
-2017-12-31 06:59 PST -0800
-2017-12-31 14:59 GMT +0000
-2017-12-31 15:59 CET +0100
-2017-12-31 23:59 JST +0900
-2018-01-01 01:59 AEDT +1100
+2017-12-31 14:59:00 +0000
+2017-12-31 06:59:00 -0800
+2017-12-31 14:59:00 +0000
+2017-12-31 15:59:00 +0100
+2017-12-31 23:59:00 +0900
+2018-01-01 01:59:00 +1100
 ```
